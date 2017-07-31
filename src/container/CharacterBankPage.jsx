@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 
-class TrainerCreationPage extends Component {
+class CharacterBankPage extends Component {
     render() {
         return (
             <div>
-                <h1>Trainer Creation Page</h1>
+                <h1>Character Bank Page</h1>
             </div>
         );
     }
 }
 
-default export TrainerCreationPage;
+export default CharacterBankPage;

@@ -1,30 +1,40 @@
 import React, { Component } from 'react';
-import { Switch, Route } from 'react-router';
+import { Container, Row, Col} from 'react-grid-system';
+import { Link, Switch, Route } from 'react-router-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import {MuiThemeProvider} from 'material-ui';
+import {createMuiTheme, MuiThemeProvider} from 'material-ui/styles';
 
-import Hello from "../component/Hello";
 import BattleSimPage from "../container/BattleSimPage";
+import TrainerCreatorPage from "./TrainerCreatorPage";
+import CharacterBankPage from "./CharacterBankPage";
+import TrainerProfile from "./TrainerProfile";
 
 injectTapEventPlugin();
 
-class App extends Component {
-    constructor(props) {
-        super(props);
-    }
+const theme = createMuiTheme({});
 
+class App extends Component {
     render() {
         return (
-            <MuiThemeProvider>
-                <div>
-                    <Hello/>
+            <MuiThemeProvider theme={theme}>
+                <Container>
+                    <Link to="/battle-sim">Battle Sim</Link><br/>
+                    <Link to="/trainer-creator">Trainer Creator</Link><br/>
+                    <Link to="/character-bank">Character Bank</Link><br/>
+                    {/*<Link to="/item-generator">Item Generator</Link><br/>*/}
+                    {/*<Link to="/pokemon-generator">Pokemon Generator</Link><br/>*/}
+                    {/*<Link to="/trainer-generator">Trainer Generator</Link><br/>*/}
                     <Switch>
-                        <Route exact path={"/"} component={BattleSimPage}/>
+                        <Route exact path="/" component={TrainerCreatorPage}/>
+                        <Route exact path="/battle-sim" component={BattleSimPage}/>
+                        <Route exact path="/trainer-creator" component={TrainerCreatorPage}/>
+                        <Route exact path="/character-bank" component={CharacterBankPage}/>
+                        <Route path="/trainer/:id" component={TrainerProfile}/>
                         <Route render={function () {
-                            return <h1>No Page Found</h1>
+                            return <h1>No Page Found (T_T)</h1>
                         }}/>
                     </Switch>
-                </div>
+                </Container>
             </MuiThemeProvider>
         );
     }

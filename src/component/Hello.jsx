@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { string } from 'prop-types';
+
+// NOTE: this is component is a simple reference
+// its not really meant to be used in application
 
 class Hello extends Component {
     render() {
@@ -12,7 +15,7 @@ class Hello extends Component {
 }
 
 Hello.propTypes = {
-    name: PropTypes.string
+    name: string
 };
 
 Hello.defaultProps = {

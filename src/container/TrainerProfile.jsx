@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 
-class BattleSimPage extends Component {
+class TrainerProfilePage extends Component {
     render() {
         return (
             <div>
-                <h1>Battle Sim Page</h1>
+                <h1>Trainer Profile Page</h1>
             </div>
         );
     }
 }
 
-export default BattleSimPage;
+export default TrainerProfilePage;

@@ -5,16 +5,19 @@ import { Provider } from 'react-redux'
 import { ConnectedRouter, routerMiddleware} from 'react-router-redux';
 import { applyMiddleware, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import createLogger from 'redux-logger';
+// import createLogger from 'redux-logger';
 import thunk from 'redux-thunk';
 
 import App from "./container/App";
 import RootReducer from './reducer/RootReducer'
 
+// Hash history is needed to start the URL at "/" instead of "file:///"
 const history = createHashHistory();
 
-let middleware = applyMiddleware(createLogger, thunk, routerMiddleware(history));
+// TODO: Remove createLogger for production builds
+let middleware = applyMiddleware(thunk, routerMiddleware(history));
 
+// TODO: Remove for production builds
 middleware = composeWithDevTools(middleware);
 
 const store = createStore(RootReducer, middleware);
