@@ -1,13 +1,34 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
+import CharacterBank from "../component/CharacterBank";
 
 class CharacterBankPage extends Component {
     render() {
         return (
-            <div>
-                <h1>Character Bank Page</h1>
-            </div>
+            <CharacterBank trainers={this.props.trainers}/>
         );
     }
 }
 
-export default CharacterBankPage;
+CharacterBankPage.propTypes = {
+    trainers: PropTypes.array.isRequired
+};
+
+CharacterBankPage.defaultProps = {
+};
+
+const mapStateToProps = (state) => {
+    return {
+        trainers: state.trainers
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CharacterBankPage);

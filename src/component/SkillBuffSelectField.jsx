@@ -6,14 +6,12 @@ import decamelize from 'decamelize';
 
 class SkillBuffSelectField extends Component {
     skillOptionList = () => {
-        const options = Object.keys(this.props.trainer.skills).map((skill) => {
+        return Object.keys(this.props.trainer.skills).map((skill) => {
             const value = skill;
             const label = toTitleCase(decamelize(skill, " "));
             const disabled = Object.values(this.props.trainer.background).includes(skill);
             return ({value, label, disabled});
         });
-
-        return options;
     };
 
     render() {

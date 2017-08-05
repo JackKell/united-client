@@ -1,37 +1,35 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, createStyleSheet } from 'material-ui/styles';
-import List, {
-    ListItem,
-    ListItemAvatar,
-    ListItemIcon,
-    ListItemSecondaryAction,
-    ListItemText,
-} from 'material-ui/List';
-import Paper from 'material-ui/Paper';
-import IconButton from 'material-ui/IconButton';
 import Grid from 'material-ui/Grid';
 import MobileStepper from 'material-ui/MobileStepper';
-import TextField from 'material-ui/TextField';
-import Add from 'material-ui-icons/Add';
-import Delete from 'material-ui-icons/Delete';
+import Paper from 'material-ui/Paper';
+import { withStyles, createStyleSheet } from 'material-ui/styles';
 
-import GenderSelectField from "./GenderSelectField";
-import SkillBuffSelectField from "./SkillBuffSelectField";
+import TrainerInfoStep from './TrainerInfoStep';
+import TrainerBackgroundMaker from './TrainerBackgroundMaker';
+import TrainerEdgeSelect from './TrainerEdgeSelect';
+import TrainerFeatureSelect from './TrainerFeatureSelect';
+import StatAssigner from "./StatAssigner";
+import FinalizeTrainer from "./FinalizeTrainer";
+import TrainerPartyBuilder from "./TrainerPartyBuilder";
+import TrainerInventorySetup from "./TrainerInventorySetup";
 
 const styleSheet = createStyleSheet('TrainerCreator', theme => ({
     root: {
+        flexGrow: 1,
         marginTop: 30,
-        display: 'flex',
-        flexWrap: 'wrap',
     },
     paper: {
-        padding: "16px",
+        padding: 16,
+        color: theme.palette.text.primary,
+        height: "100%",
+    },
+    currentStep: {
         color: theme.palette.text.primary,
     },
     stepper: {
         backgroundColor: "white",
-        textColor: "black"
+        textColor: "black",
     },
     selectField: {
         marginBottom: "1em",
@@ -39,100 +37,144 @@ const styleSheet = createStyleSheet('TrainerCreator', theme => ({
     }
 }));
 
+// TODO: Remove these dummy constants
 const edges = [
-    {name: "Edge", requirements:"Be close to edgy", effect: "Become edgy"},
-];
+    {id: 1, name: "Apricorn Balls",
+        prerequisites:"Novice Survival or Adept Technology Education",
+        effect: "As an Extended Action, you may craft Apricorns into their corresponding Poké Ball. Use of this Feature requires access to a Poké Ball Tool Box."},
+    {id: 2, name: "Beast Master",
+        prerequisites:"Novice Intimidate",
+        effect: "You may use Intimidate instead of Command to make Pokemon at 0 or 1 Loyalty obey your commands. You may also use Intimidate instead of Command to determine the limits and Bonus Experience from Training."},
+    {id: 3, name: "Groomer",
+        prerequisites: "Novice Pokémon Education",
+        effect: "You know how to effectively groom your Pokémon with access to a Groomer’s Kit. You may groom up to 6 Pokémon in one hour. Grooming Pokémon may count as an hour of Training, and you  may apply Experience Training, teach Poke-Edges, and apply any Features that could be applied during Training. If you apply Experience Training from Grooming, use your General Education or Pokémon Education Rank to determine Bonus Experience gained during Training. A Pokémon that has been Groomed also gains a +1d6 Bonus to the Introduction Roll of a Contest for the rest of the day."},
+    {id: 4, name: "Athletic Initiative",
+        prerequisites: "Adept Athletics",
+        effect: "You learn the Move Agility."},
+    {id: 5, name: "Basic Psionics",
+        prerequisites: "Elemental Connection (Psychic)",
+        effect: "You learn the Move Confusion."},
+    {id: 6, name: "Smooth",
+        prerequisites: "Expert Charm or Expert Focus",
+        effect: "You gain +4 Evasion against Moves with the Social keyword, and gain a +2 Bonus on Save Checks against Rage and Infatuation."},
+    {id: 7, name: "Acrobat",
+        prerequisites: "Novice Acrobatics",
+        effect: "Increase your Jump and Long Jump Capabilities by +1 each."},
+    {id: 8, name: "Wallrunner",
+        prerequisites:"Expert Acrobatics",
+        effect: "You may run on vertical surfaces both vertically and horizontally for up to your Acrobatics Rank in meters before jumping off."},
 
-function getEdgeList(edges) {
-    return (edges.map(edge => {
-        return (
-                <ListItem key={edge.name} button>
-                    <ListItemText
-                        primary={edge.name}
-                        secondary={"Requirement: " + edge.requirements}/>
-                    <ListItemSecondaryAction>
-                        <IconButton aria-label="Delete">
-                            <Add />
-                        </IconButton>
-                        <IconButton aria-label="Delete">
-                            <Delete />
-                        </IconButton>
-                    </ListItemSecondaryAction>
-                </ListItem>
-            );
-    }));
-}
+];
+const features = [];
+const baseStats = {
+    hp: 10,
+    attack: 5,
+    defense: 5,
+    specialAttack: 5,
+    specialDefense: 5,
+    speed: 5,
+};
+const maxInitialStatInc = 5;
+const newTrainer = {
+    level: 1,
+    statPoints: 10,
+    featurePoints: 4,
+    edgePoints: 4,
+    name: "",
+    age: "",
+    gender: "",
+    height: "",
+    weight: "",
+    background: {
+        adeptSkill: null,
+        noviceSkill: null,
+        patheticSkill1: null,
+        patheticSkill2: null,
+        patheticSkill3: null,
+    },
+    description: "",
+    skills: {
+        acrobatics: 2,
+        athletics: 2,
+        combat: 2,
+        intimidate: 2,
+        stealth: 2,
+        survival: 2,
+        generalEducation: 2,
+        occultEducation: 2,
+        pokemonEducation: 2,
+        technologyEducation: 2,
+        guile: 2,
+        perception: 2,
+        charm: 2,
+        command: 2,
+        focus: 2,
+        intuition: 2,
+    },
+    features: [],
+    edges: [],
+    stats: {
+        hp: 10,
+        attack: 5,
+        defense: 5,
+        specialAttack: 5,
+        specialDefense: 5,
+        speed: 5,
+    }
+};
 
 class TrainerCreator extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeStep: 2,
-            lastStep: 6,
-            newTrainer: {
-                level: 1,
-                statPoints: 10,
-                name: "",
-                age: "",
-                gender: "",
-                height: "",
-                weight: "",
-                background: {
-                    adeptSkill: null,
-                    noviceSkill: null,
-                    patheticSkill1: null,
-                    patheticSkill2: null,
-                    patheticSkill3: null,
-                },
-                description: "",
-                skills: {
-                    acrobatics: 2,
-                    athletics: 2,
-                    combat: 2,
-                    intimidate: 2,
-                    stealth: 2,
-                    survival: 2,
-                    generalEducation: 2,
-                    occultEducation: 2,
-                    pokemonEducation: 2,
-                    technologyEducation: 2,
-                    guile: 2,
-                    perception: 2,
-                    charm: 2,
-                    command: 2,
-                    focus: 2,
-                    intuition: 2,
-                },
-                features: [],
-                edges: [],
-                stats: {
-                    hp: 10,
-                    attack: 5,
-                    defense: 5,
-                    specialAttack: 5,
-                    specialDefense: 5,
-                    speed: 5,
-                }
-            },
+            stepIndex: 0,
+            totalSteps: 8,
+            trainer: newTrainer,
         };
     }
 
+    handleChangeStat = (stat, delta) => {
+        const trainer = this.state.trainer;
+        const oldStats = trainer.stats;
+        const statPoints = trainer.statPoints - delta;
+        const statValue = oldStats[stat] + delta;
+
+        // Check if there are enough stat points left to spend
+        if (statPoints < 0) return;
+        // Check if there are already to many points allocated to that stat
+        if (statValue - baseStats[stat] > maxInitialStatInc) return;
+        // Check if the stat would be reduced past its base stat
+        if (statValue < baseStats[stat]) return;
+
+        let stats = {...trainer.stats};
+        stats[stat] = statValue;
+
+
+        this.setState({
+            trainer: {
+                ...this.state.trainer,
+                stats,
+                statPoints
+            }
+        })
+    };
+
     handleNext = () => {
         this.setState({
-            activeStep: this.state.activeStep + 1,
+            stepIndex: this.state.stepIndex + 1,
         });
     };
 
     handleBack = () => {
         this.setState({
-            activeStep: this.state.activeStep - 1,
+            stepIndex: this.state.stepIndex - 1,
         });
     };
 
-    handleChangeTrait = (trait, value) => {
+    handleSetTrait = (trait, value) => {
         this.setState({
-            newTrainer: {
-                ...this.state.newTrainer,
+            trainer: {
+                ...this.state.trainer,
                 [trait]: value
             }
         })
@@ -144,175 +186,57 @@ class TrainerCreator extends Component {
 
         if (skill === null) {
             background = {
-                ...this.state.newTrainer.background,
+                ...this.state.trainer.background,
                 [buff]: null
             };
             skills = {
-                ...this.state.newTrainer.skills,
-                [this.state.newTrainer.background[buff]]: 2
+                ...this.state.trainer.skills,
+                [this.state.trainer.background[buff]]: 2
             };
         } else {
             background = {
-                ...this.state.newTrainer.background,
+                ...this.state.trainer.background,
                 [buff]: skill
             };
             skills = {
-                ...this.state.newTrainer.skills,
-                [this.state.newTrainer.background[buff]]: 2,
+                ...this.state.trainer.skills,
+                [this.state.trainer.background[buff]]: 2,
                 [skill]: buffAmount
             };
         }
 
         this.setState({
             ...this.state,
-            newTrainer: {
-                ...this.state.newTrainer,
+            trainer: {
+                ...this.state.trainer,
                 skills,
                 background
             }
         })
     };
 
+    handleSaveTrainer = () => {
+        this.props.addTrainer(this.state.trainer);
+
+        this.setState({
+            ...this.state,
+            trainer: newTrainer,
+            stepIndex: 0,
+        })
+    };
+
     renderStepContent = () => {
-        const {classes} = this.props;
-        switch(this.state.activeStep) {
-            case 0:
-                return (
-                    <Grid item xs={12}>
-                        <h4>Character Information</h4>
-                        <TextField
-                            label={"Name"}
-                            margin="normal"
-                            defaultValue={this.state.newTrainer.name}
-                            onBlur={event => this.handleChangeTrait("name", event.target.value)}
-                            fullWidth/>
-                        <TextField
-                            label={"Age"}
-                            margin="normal"
-                            defaultValue={this.state.newTrainer.age}
-                            onBlur={event => this.handleChangeTrait("age", event.target.value)}
-                            fullWidth/>
-                        <TextField
-                            label={"Weight"}
-                            margin="normal"
-                            defaultValue={this.state.newTrainer.weight}
-                            onBlur={event => this.handleChangeTrait("weight", event.target.value)}
-                            fullWidth/>
-                        <TextField
-                            multiline
-                            label={"Description"}
-                            margin="normal"
-                            defaultValue={this.state.newTrainer.description}
-                            onBlur={event => this.handleChangeTrait("description", event.target.value)}
-                            fullWidth/>
-                        <GenderSelectField
-                            className={classes.selectField}
-                            clearable={false}
-                            showMenuBelow
-                            floatingLabel
-                            name="trainer-gender-select"
-                            value={this.state.newTrainer.gender}
-                            onChange={(option) => this.handleChangeTrait("gender", option.value)}/>
-                    </Grid>
-                );
-            case 1:
-                return (
-                    <Grid item xs={12}>
-                        <h4>Background</h4>
-                        <SkillBuffSelectField
-                            className={classes.selectField}
-                            trainer={this.state.newTrainer}
-                            placeholder="Adept Skill"
-                            handleChange={this.handleBuffSkill}
-                            buff="adeptSkill"
-                            buffAmount={4}
-                            value={this.state.newTrainer.background.adeptSkill}
-                        />
-                        <SkillBuffSelectField
-                            className={classes.selectField}
-                            trainer={this.state.newTrainer}
-                            placeholder="Novice Skill"
-                            handleChange={this.handleBuffSkill}
-                            buff="noviceSkill"
-                            buffAmount={3}
-                            value={this.state.newTrainer.background.noviceSkill}
-                        />
-                        <SkillBuffSelectField
-                            className={classes.selectField}
-                            trainer={this.state.newTrainer}
-                            placeholder="Pathetic Skill 1"
-                            handleChange={this.handleBuffSkill}
-                            buff="patheticSkill1"
-                            buffAmount={1}
-                            value={this.state.newTrainer.background.patheticSkill1}
-                        />
-                        <SkillBuffSelectField
-                            className={classes.selectField}
-                            trainer={this.state.newTrainer}
-                            placeholder="Pathetic Skill 2"
-                            handleChange={this.handleBuffSkill}
-                            buff="patheticSkill2"
-                            buffAmount={1}
-                            value={this.state.newTrainer.background.patheticSkill2}
-                        />
-                        <SkillBuffSelectField
-                            className={classes.selectField}
-                            trainer={this.state.newTrainer}
-                            placeholder="Pathetic Skill 3"
-                            handleChange={this.handleBuffSkill}
-                            buff="patheticSkill3"
-                            buffAmount={1}
-                            value={this.state.newTrainer.background.patheticSkill3}
-                        />
-                    </Grid>
-                );
-            case 2:
-                return (
-                    <Grid item xs={12}>
-                        <h4>Edge Select</h4>
-                        <div style={{maxHeight: 200, overflow: 'auto'}}>
-                            <List>
-                                <List>
-                                    {getEdgeList(edges)}
-                                    {/*{generate(*/}
-                                        {/*<ListItem button>*/}
-                                            {/*<ListItemText*/}
-                                                {/*primary="Single-line item"*/}
-                                                {/*secondary={"Secondary text"}*/}
-                                            {/*/>*/}
-                                        {/*</ListItem>,*/}
-                                    {/*)}*/}
-                                </List>
-                            </List>
-                        </div>
-                    </Grid>
-                );
-            case 3:
-                return (
-                    <div></div>
-                );
-            case 4:
-                return (
-                    <div></div>
-                );
-            case 5:
-                return (
-                    <div></div>
-                );
-            case 6:
-                return (
-                    <div></div>
-                );
-            case 7:
-                return (
-                    <div></div>
-                );
-            default:
-                return (
-                    <div>
-                        <h3>Something is wrong</h3>
-                    </div>
-                );
+        const {stepIndex, trainer} = this.state;
+        switch(stepIndex) {
+            case 0: return <TrainerInfoStep trainer={trainer} handleChangeTrait={this.handleSetTrait}/>;
+            case 1: return <TrainerBackgroundMaker trainer={trainer} handleBuffSkill={this.handleBuffSkill}/>;
+            case 2: return <TrainerEdgeSelect trainer={trainer} edges={edges}/>;
+            case 3: return <TrainerFeatureSelect trainer={trainer} features={features}/>;
+            case 4: return <StatAssigner trainer={trainer} handleChangeStat={this.handleChangeStat}/>;
+            case 5: return <TrainerPartyBuilder/>;
+            case 6: return <TrainerInventorySetup/>;
+            case 7: return <FinalizeTrainer handleSaveTrainer={this.handleSaveTrainer}/>;
+            default: return <h1>Something is wrong</h1>;
         }
     };
 
@@ -320,44 +244,47 @@ class TrainerCreator extends Component {
         const {classes} = this.props;
 
         return (
-            <Grid container gutter={24}>
-                <Grid item xs={12}>
-                    <Paper className={classes.paper}>
-                        <h1>Trainer Creation Page</h1>
-                    </Paper>
-                </Grid>
-                <Grid item xs={5}>
-                    <Paper className={classes.paper}>
-                        <h3>Character Overview</h3>
-                        {JSON.stringify(this.state.newTrainer, null, '\t')}
-                    </Paper>
-                </Grid>
-                <Grid item xs={7}>
-                    <Paper className={classes.paper}>
-                        <h3>Step {this.state.activeStep + 1}</h3>
-                        <Grid container gutter={24}>
+            <div className={classes.root}>
+                <Grid container gutter={8}>
+                    <Grid item xs={12}>
+                        <Paper className={classes.paper}>
+                            <h1>Trainer Creation Page</h1>
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={4}>
+                        <Paper className={classes.paper}>
+                            <h3>Character Overview</h3>
+                            {JSON.stringify(this.state.trainer, null, '\t')}
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={8}>
+                        <Paper className={classes.paper}>
                             {this.renderStepContent()}
-                        </Grid>
-                        <MobileStepper
-                            className={classes.stepper}
-                            type="dots"
-                            steps={this.state.lastStep}
-                            position="static"
-                            activeStep={this.state.activeStep}
-                            onBack={this.handleBack}
-                            onNext={this.handleNext}
-                            disableBack={this.state.activeStep === 0}
-                            disableNext={this.state.activeStep === this.state.lastStep - 1}/>
-                    </Paper>
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Paper>
+                            <MobileStepper
+                                className={classes.stepper}
+                                type="dots"
+                                steps={this.state.totalSteps}
+                                position="bottom"
+                                activeStep={this.state.stepIndex}
+                                onBack={this.handleBack}
+                                onNext={this.handleNext}
+                                disableBack={this.state.stepIndex === 0}
+                                disableNext={this.state.stepIndex === this.state.totalSteps - 1}/>
+                        </Paper>
+                    </Grid>
                 </Grid>
-            </Grid>
+            </div>
         );
     }
 }
 
 TrainerCreator.propTypes = {
-    classes: PropTypes.object.isRequired,
-
+    addTrainer: PropTypes.func.isRequired,
+    classes: PropTypes.object,
 };
 
 TrainerCreator.defaultProps = {
