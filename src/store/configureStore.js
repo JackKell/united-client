@@ -1,4 +1,4 @@
-import PouchDB from 'pouchdb'
+import PouchDB from 'pouchdb-browser';
 import {routerMiddleware} from 'react-router-redux';
 import {applyMiddleware, createStore} from 'redux';
 import {composeWithDevTools} from 'redux-devtools-extension';
