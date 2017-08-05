@@ -14,7 +14,6 @@ import RootReducer from './reducer/RootReducer'
 // Hash history is needed to start the URL at "/" instead of "file:///"
 const history = createHashHistory();
 
-// TODO: Remove createLogger for production builds
 let middleware = applyMiddleware(thunk, routerMiddleware(history));
 
 // TODO: Remove for production builds

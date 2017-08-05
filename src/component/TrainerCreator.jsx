@@ -134,50 +134,50 @@ class TrainerCreator extends Component {
     }
 
     handleChangeStat = (stat, delta) => {
-        const trainer = this.state.trainer;
-        const oldStats = trainer.stats;
-        const statPoints = trainer.statPoints - delta;
-        const statValue = oldStats[stat] + delta;
+        const oldStatPoints = this.state.trainer.statPoints;
+        const oldStats = {...this.state.trainer.stats};
+        const newStatPoints = oldStatPoints - delta;
+        const newStatValue = oldStats[stat] + delta;
+        const baseStatValue = baseStats[stat];
 
         // Check if there are enough stat points left to spend
-        if (statPoints < 0) return;
+        if (oldStatPoints < 0) return;
         // Check if there are already to many points allocated to that stat
-        if (statValue - baseStats[stat] > maxInitialStatInc) return;
+        if (newStatValue - baseStatValue > maxInitialStatInc) return;
         // Check if the stat would be reduced past its base stat
-        if (statValue < baseStats[stat]) return;
+        if (newStatValue < baseStatValue) return;
 
-        let stats = {...trainer.stats};
-        stats[stat] = statValue;
-
-
-        this.setState({
+        this.setState((prevState, props) => ({
             trainer: {
-                ...this.state.trainer,
-                stats,
-                statPoints
+                ...prevState.trainer,
+                statPoints: newStatPoints,
+                stats: {
+                    ...prevState.trainer.stats,
+                    [stat]: newStatValue
+                }
             }
-        })
+        }));
     };
 
     handleNext = () => {
-        this.setState({
-            stepIndex: this.state.stepIndex + 1,
-        });
+        this.setState((prevState, props) => ({
+            stepIndex: prevState.stepIndex + 1
+        }));
     };
 
     handleBack = () => {
-        this.setState({
-            stepIndex: this.state.stepIndex - 1,
-        });
+        this.setState((prevState, props) => ({
+            stepIndex: prevState.stepIndex - 1
+        }));
     };
 
     handleSetTrait = (trait, value) => {
-        this.setState({
+        this.setState((prevState, props) => ({
             trainer: {
-                ...this.state.trainer,
+                ...prevState.trainer,
                 [trait]: value
             }
-        })
+        }));
     };
 
     handleBuffSkill = (buff, buffAmount, skill) => {
@@ -205,24 +205,22 @@ class TrainerCreator extends Component {
             };
         }
 
-        this.setState({
-            ...this.state,
+        this.setState((prevState, props) => ({
             trainer: {
-                ...this.state.trainer,
+                ...prevState.trainer,
                 skills,
                 background
             }
-        })
+        }));
     };
 
     handleSaveTrainer = () => {
         this.props.addTrainer(this.state.trainer);
 
-        this.setState({
-            ...this.state,
+        this.setState((prevState, props) => ({
             trainer: newTrainer,
-            stepIndex: 0,
-        })
+            stepIndex: 0
+        }));
     };
 
     renderStepContent = () => {
