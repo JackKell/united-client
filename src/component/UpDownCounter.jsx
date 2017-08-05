@@ -12,7 +12,7 @@ class UpDownCounter extends Component {
         } = this.props;
         return (
             <div>
-                <Grid container gutter={8}>
+                <Grid container spacing={8}>
                     <Grid item xs={7}>
                         <h4>{name}: {value}</h4>
                     </Grid>

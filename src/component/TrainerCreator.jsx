@@ -243,7 +243,7 @@ class TrainerCreator extends Component {
 
         return (
             <div className={classes.root}>
-                <Grid container gutter={8}>
+                <Grid container spacing={8}>
                     <Grid item xs={12}>
                         <Paper className={classes.paper}>
                             <h1>Trainer Creation Page</h1>

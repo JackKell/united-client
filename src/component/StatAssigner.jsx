@@ -26,7 +26,7 @@ class StatAssigner extends Component {
         const {trainer} = this.props;
         return (
             <div>
-                <Grid container gutter={8}>
+                <Grid container spacing={8}>
                     <Grid item xs={12}>
                         <h3>Combat Stat Assigner</h3>
                         <h4>Stat Points: {trainer.statPoints}</h4>
