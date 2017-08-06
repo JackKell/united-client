@@ -1,5 +1,6 @@
 // Actions
 export const ADD_TRAINER = "ADD_TRAINER";
+export const BATCH_ADD_TRAINERS = "BATCH_ADD_TRAINERS";
 export const REMOVE_TRAINER = "REMOVE_TRAINER";
 export const EDIT_TRAINER = "EDIT_TRAINER";
 
@@ -8,6 +9,13 @@ export function addTrainer(trainer) {
     return {
         type: ADD_TRAINER,
         payload: {trainer}
+    }
+}
+
+export function batchAddTrainers(trainers) {
+    return {
+        type: BATCH_ADD_TRAINERS,
+        payload: {trainers},
     }
 }
 

@@ -76,6 +76,7 @@ const baseStats = {
 };
 const maxInitialStatInc = 5;
 const newTrainer = {
+    _id: "0",
     level: 1,
     statPoints: 10,
     featurePoints: 4,
@@ -215,7 +216,9 @@ class TrainerCreator extends Component {
     };
 
     handleSaveTrainer = () => {
-        this.props.addTrainer(this.state.trainer);
+        const trainer = this.state.trainer;
+        trainer._id = new Date().toISOString();
+        this.props.addTrainer(trainer);
 
         this.setState((prevState, props) => ({
             trainer: newTrainer,
