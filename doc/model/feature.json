@@ -1,0 +1,19 @@
+{
+  "featureId": {
+    "name": "String",
+    "frequency": "String",
+    "action": "String",
+    "prerequisites": "String",
+    "target": "String",
+    "trigger": "String",
+    "isRanked": "Boolean",
+    "isWeapon": "String",
+    "isClass": "Boolean",
+    "statBuffs:": [
+      "String",
+    ],
+    "statDebuffs": [
+      "String",
+    ],
+  }
+}

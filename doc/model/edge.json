@@ -1,0 +1,7 @@
+{
+  "edgeId": {
+    "name": "String",
+    "prerequisites:": "String",
+    "effect": "String",
+  }
+}

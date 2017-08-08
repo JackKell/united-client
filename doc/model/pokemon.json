@@ -1,0 +1,42 @@
+{
+  "pokemonId": {
+    "name": "String",
+    "trainer": "String",
+    "level": "String",
+    "experience": "String",
+    "loyalty": "Int",
+    "height": "String",
+    "weight": "String",
+    "species": "String",
+    "nature": "String",
+    "gender": "String",
+    "heldItem": "String",
+    "skills": {
+      "acrobatics": "String",
+      "athletics": "String",
+      "combat": "String",
+      "stealth": "String",
+      "focus": "String",
+      "perception": "String",
+    },
+    "abilities": [
+      "abilityId1",
+      "abilityId2",
+    ],
+    "stats": {
+      "hp": "Int",
+      "attack": "Int",
+      "defense": "Int",
+      "specialAttack": "Int",
+      "specialDefense": "Int",
+      "speed": "Int",
+    },
+    "contestStats": {
+      "beauty": "Int",
+      "cool": "Int",
+      "smart": "Int",
+      "cute": "Int",
+      "tough": "Int",
+    },
+  }
+}

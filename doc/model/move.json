@@ -1,0 +1,25 @@
+// Move model
+{
+  "moveId": {
+    "name": "String",
+    "type": "String",
+    "frequency": "String",
+    "damageBase": "Int",
+    "accuracyCheck": "Int",
+    "class": "String",
+    "range": "String",
+    "effect": "String",
+    "contestType": "String",
+    "contestEffect": "String",
+  }
+}
+
+// Damage Base model
+{
+  "damageBaseId": {
+    "actual": "String",
+    "minimum": "Int",
+    "average": "Int",
+    "maximum": "Int",
+  }
+}

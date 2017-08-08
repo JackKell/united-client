@@ -1,0 +1,51 @@
+{
+  "speciesId": {
+    "name": "String",
+    "height": "String",
+    "weight": "String",
+    "overland": "Int",
+    "swim": "Int",
+    "longJump": "Int",
+    "highJump": "Int",
+    "power": "Int",
+    "capabilities": [
+      "String",
+    ],
+// TODO: figure out how to organize evolution data
+    "evolution": "",
+    "genderRatio": "Float",
+    "averageHatchRate": "Int",
+    "baseStats": {
+      "hp": "Int",
+      "attack": "Int",
+      "defense": "Int",
+      "specialAttack": "Int",
+      "specialDefense": "Int",
+      "speed": "Int",
+    },
+    "basicAbilities": ["String",],
+    "advancedAbilities": ["String",],
+    "highAbility": "String",
+    "type": ["String",],
+    "diet": ["String",],
+    "eggGroup": ["String",],
+    "levelUpMoves": {
+      "moveId1": "Int",
+    },
+    "eggMoves": [
+      "moveId1",
+      "moveId2",
+      "moveIdN",
+    ],
+    "tutorMoves": [
+      "moveId1",
+      "moveId2",
+      "moveIdN",
+    ],
+    "machineMoves": [
+      "moveId1",
+      "moveId2",
+      "moveIdN",
+    ],
+  }
+}

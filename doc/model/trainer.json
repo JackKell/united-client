@@ -1,0 +1,63 @@
+/*Trainer Model*/
+{
+  "trainerId": {
+    "name": "String",
+    "gender": "String",
+    "age": "String",
+    "level": "Int",
+    "experience": "Int",
+    "featurePoints": "Int",
+    "edgePoints": "Int",
+    "actionPoints": "Int",
+    "injuries": "Int",
+    "background": {
+      "adeptSkill": "String",
+      "noviceSkill": "String",
+      "patheticSkill1": "String",
+      "patheticSkill2": "String",
+      "patheticSkill3": "String"
+    },
+    "skills": {
+      "acrobatics": "Int",
+      "athletics": "Int",
+      "combat": "Int",
+      "intimidate": "Int",
+      "stealth": "Int",
+      "survival": "Int",
+      "generalEdu": "Int",
+      "medicineEdu": "Int",
+      "occultEdu": "Int",
+      "pokemonEdu": "Int",
+      "technologyEdu": "Int",
+      "guile": "Int",
+      "perception": "Int",
+      "charm": "Int",
+      "command": "Int",
+      "focus": "Int",
+      "intuition": "Int"
+    },
+    "stats": {
+      "hp": "Int",
+      "attack": "Int",
+      "defense": "Int",
+      "specialAttack": "Int",
+      "specialDefense": "Int",
+      "speed": "Int"
+    },
+    "features": "Array(Int/Id or small Objects)",
+    "edges": "Array(Int/Id or small Objects)",
+    "moves": [
+      "moveId1",
+      "moveId2",
+      "moveIdN"
+    ],
+    "pokemon": [
+      "pokemonId1",
+      "pokemonId2",
+      "pokemonIdN",
+    ],
+    "party": [
+      "String",
+    ],
+  }
+}
